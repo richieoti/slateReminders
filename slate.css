@@ -125,7 +125,7 @@ body {
 
 .privacy-title strong,
 .privacy-title span {
-	display: block;
+	display: inline;
 	font-weight: 400;
 	white-space: nowrap;
 }
@@ -135,7 +135,7 @@ body {
 }
 
 .privacy-title span {
-	font-size: clamp(25px, 7.2vw, 105px);
+	font-size: inherit;
 }
 
 .privacy-description {
