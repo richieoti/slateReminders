@@ -1,0 +1,245 @@
+@font-face {
+	font-family: 'Cal Sans';
+	src: url('CalSans-Regular.ttf') format('truetype');
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'SF Pro Display';
+	src: url('SF-Pro-Display-Regular.ttf') format('truetype');
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+}
+
+:root {
+	background: #000;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	display: flex;
+	flex-direction: column;
+	min-height: 100%;
+	min-height: 100vh;
+	margin: 0;
+	background: #000;
+}
+
+.site-nav {
+	position: sticky;
+	top: 0;
+	z-index: 10;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	min-height: 64px;
+	padding: 40px 80px 20px;
+	margin-bottom: 15px;
+	background: #000;
+}
+
+.site-brand {
+	color: rgb(255 255 255 / 50%);
+	font-family: 'Cal Sans', sans-serif;
+	font-size: 2.4rem;
+	text-decoration: none;
+}
+
+.site-links {
+	display: flex;
+	align-items: center;
+	gap: 28px;
+	font-family: 'SF Pro Display', sans-serif;
+	font-size: 1.15rem;
+}
+
+.site-links a {
+	color: #fff;
+	text-decoration: none;
+}
+
+.site-links a:hover {
+	color: rgb(255 255 255 / 70%);
+}
+
+.site-footer {
+	position: relative;
+	z-index: 2;
+	margin-top: auto;
+	min-height: 180px;
+	padding: 40px 80px 20px;
+	background: #101010;
+}
+
+.footer-brand {
+	color: rgb(255 255 255 / 50%);
+	font-family: 'Cal Sans', sans-serif;
+	font-size: 2.4rem;
+	text-decoration: none;
+}
+
+.footer-mobile-content {
+	display: none;
+}
+
+.privacy-page {
+	position: relative;
+	min-height: calc(100vh - 79px);
+	overflow: hidden;
+	padding: 0 80px 120px;
+	color: #fff;
+}
+
+.privacy-page::before {
+	content: '';
+	position: absolute;
+	top: -35px;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 0;
+	background: url('assets/homeBackground.png') top center / 100% auto no-repeat;
+	opacity: .9;
+	pointer-events: none;
+}
+
+.privacy-content {
+	position: relative;
+	z-index: 1;
+	max-width: 920px;
+}
+
+.privacy-title {
+	width: max-content;
+	margin: 0;
+	font-family: 'Cal Sans', sans-serif;
+	line-height: .95;
+}
+
+.privacy-title strong,
+.privacy-title span {
+	display: block;
+	font-weight: 400;
+	white-space: nowrap;
+}
+
+.privacy-title strong {
+	font-size: clamp(44px, 16vw, 220px);
+}
+
+.privacy-title span {
+	font-size: clamp(25px, 7.2vw, 105px);
+}
+
+.privacy-description {
+	max-width: 520px;
+	padding-top: 10px;
+	margin: 0;
+	font-family: 'SF Pro Display', sans-serif;
+	font-size: clamp(14px, 1.9vw, 24px);
+	line-height: 1.15;
+}
+
+.privacy-copy {
+	max-width: 900px;
+	margin-top: clamp(80px, 12vw, 170px);
+	font-family: 'SF Pro Display', sans-serif;
+	font-size: clamp(16px, 1.5vw, 21px);
+}
+
+.privacy-copy h2 {
+	margin: 36px 0 8px;
+	font-family: 'Cal Sans', sans-serif;
+	font-size: clamp(24px, 3vw, 42px);
+	font-weight: 400;
+}
+
+.privacy-copy p {
+	max-width: 840px;
+	margin: 0 0 20px;
+}
+
+@media (max-width: 640px) {
+	.site-nav {
+		padding: 15px 30px 0;
+	}
+
+	.site-links {
+		gap: 14px;
+		font-size: .78rem;
+	}
+
+	.site-footer {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 24px;
+		text-align: center;
+		padding: 15px 30px 20px;
+	}
+
+	.footer-brand {
+		font-size: 2.4rem;
+	}
+
+	.footer-mobile-content {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 18px;
+		font-family: 'SF Pro Display', sans-serif;
+	}
+
+	.footer-attribution {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 6px;
+		color: rgb(255 255 255 / 60%);
+		font-size: .85rem;
+	}
+
+	.footer-attribution img {
+		width: .85rem;
+		height: .85rem;
+	}
+
+	.footer-links {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 14px 20px;
+		font-family: 'SF Pro Display', sans-serif;
+		font-size: .78rem;
+	}
+
+	.footer-links a {
+		color: #fff;
+		text-decoration: none;
+	}
+
+	.footer-links a:hover {
+		color: rgb(255 255 255 / 70%);
+	}
+
+	.footer-instagram {
+		display: inline-flex;
+		align-items: center;
+	}
+
+	.footer-instagram img {
+		width: .9rem;
+		height: .9rem;
+	}
+
+	.privacy-page {
+		padding: 0 30px 80px;
+	}
+}

@@ -1,0 +1,861 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Slate</title>
+	<link rel="stylesheet" href="slate.css">
+	<style>
+		:root {
+			background: #000;
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		html,
+		body {
+			min-height: 100%;
+			margin: 0;
+			background: #000;
+		}
+
+		.home-title {
+			position: relative;
+			z-index: 1;
+			width: max-content;
+			margin: 0 80px 0;
+			color: #fff;
+			font-family: 'Cal Sans', sans-serif;
+			line-height: .95;
+		}
+
+		.home-title::before {
+			content: '';
+			position: absolute;
+			top: 8%;
+			left: calc(100% - 128px);
+			z-index: 0;
+			width: 400px;
+			height: clamp(110px, 27vw, 380px);
+			background: url('assets/slateDotIcon.svg') center / 100% 100% no-repeat;
+			pointer-events: none;
+		}
+
+		.home-title strong,
+		.home-title span {
+			position: relative;
+			z-index: 1;
+			display: block;
+			white-space: nowrap;
+			font-weight: 400;
+		}
+
+		.home-title strong {
+			font-size: clamp(44px, 16vw, 220px);
+		}
+
+		.home-title span {
+			font-size: clamp(25px, 7.2vw, 105px);
+		}
+
+		.home-description {
+			position: relative;
+			z-index: 1;
+			max-width: 520px;
+			padding-top: 10px;
+			margin: 0 80px 0;
+			color: #fff;
+			font-family: 'SF Pro Display', sans-serif;
+			font-size: clamp(14px, 1.9vw, 24px);
+			line-height: 1.15;
+		}
+
+		.home-background {
+			position: fixed;
+			inset: 0;
+			z-index: 0;
+			display: block;
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			object-fit: cover;
+			filter: blur(24px);
+			transform: scale(1.1);
+		}
+
+		.reminder-marquee {
+			position: relative;
+			z-index: 1;
+			display: grid;
+			gap: 18px;
+			margin-top: 72px;
+			overflow: hidden;
+			padding-bottom: 24px;
+		}
+
+		.reminder-row {
+			position: relative;
+			z-index: 1;
+			display: flex;
+			width: max-content;
+			animation: scroll-left 78s linear infinite;
+		}
+
+		.reminder-row:nth-child(2) {
+			animation-name: scroll-right;
+			animation-duration: 90s;
+		}
+
+		.reminder-row:nth-child(3) {
+			animation-duration: 72s;
+		}
+
+		.reminder-set {
+			display: flex;
+			flex-shrink: 0;
+			gap: 18px;
+			padding-right: 18px;
+		}
+
+		.reminder-card {
+			display: block;
+			width: clamp(280px, 30vw, 460px);
+			height: auto;
+			object-fit: contain;
+		}
+
+		@keyframes scroll-left {
+			from { transform: translateX(0); }
+			to { transform: translateX(-50%); }
+		}
+
+		@keyframes scroll-right {
+			from { transform: translateX(-50%); }
+			to { transform: translateX(0); }
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			.reminder-row {
+				animation-play-state: paused;
+			}
+		}
+
+		.slate-chat-section {
+			position: relative;
+			z-index: 1;
+			display: flex;
+			justify-content: center;
+			padding: clamp(32px, 5vw, 64px) 24px 160px;
+		}
+
+		.chat-showcase {
+			display: flex;
+			align-items: center;
+			gap: clamp(32px, 6vw, 96px);
+			--field-width: min(560px, 62vw);
+		}
+
+		.slate-chat {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			padding-top: calc(var(--field-width) * .465 + 28px);
+			opacity: 0;
+			transition: opacity 1.6s ease-in-out;
+		}
+
+		.slate-chat.in-view {
+			opacity: 1;
+		}
+
+		.chat-description {
+			display: flex;
+			flex-direction: column;
+			gap: 12px;
+			max-width: 320px;
+			text-align: left;
+			opacity: 0;
+			transition: opacity 1.8s ease-in-out;
+		}
+
+		.chat-description.visible {
+			opacity: 1;
+		}
+
+		.chat-description-title {
+			margin: 0;
+			color: #fff;
+			font-family: 'Cal Sans', sans-serif;
+			font-size: clamp(22px, 2.4vw, 34px);
+			font-weight: 400;
+			line-height: 1.1;
+		}
+
+		.chat-description-text {
+			margin: 0;
+			color: rgb(255 255 255 / 70%);
+			font-family: 'SF Pro Display', sans-serif;
+			font-size: clamp(14px, 1.3vw, 18px);
+			line-height: 1.35;
+		}
+
+		.chat-input-row {
+			position: relative;
+			display: flex;
+			align-items: center;
+			gap: clamp(6px, 1vw, 10px);
+		}
+
+		.field-column {
+			width: var(--field-width);
+		}
+
+		.type-field {
+			position: relative;
+			display: flex;
+			align-items: center;
+			width: 100%;
+			height: clamp(56px, 7.5vw, 72px);
+			padding: 0 clamp(56px, 8vw, 72px) 0 clamp(24px, 3vw, 32px);
+			border-radius: 999px;
+			background: rgb(54 56 60 / 50%);
+			box-shadow: 0 14px 32px rgb(0 0 0 / 45%);
+		}
+
+		.type-field-text {
+			display: block;
+			overflow: hidden;
+			width: 100%;
+			color: #fff;
+			font-family: 'SF Pro Display', sans-serif;
+			font-size: clamp(15px, 2vw, 22px);
+			white-space: nowrap;
+			opacity: .5;
+			transition: opacity .4s ease-in-out;
+		}
+
+		.type-field-text.active {
+			opacity: 1;
+		}
+
+		.type-field-text.hidden {
+			opacity: 0;
+		}
+
+		.type-field-caret {
+			display: inline-block;
+			margin-left: 2px;
+			animation: caret-blink 1.6s step-end infinite;
+		}
+
+		.type-field-arrow {
+			position: absolute;
+			top: 50%;
+			right: clamp(14px, 2vw, 20px);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: clamp(20px, 2.4vw, 26px);
+			height: clamp(20px, 2.4vw, 26px);
+			padding: 0;
+			background: none;
+			border: 0;
+			opacity: 1;
+			transform: translateY(-50%);
+			transition: opacity .3s ease-in-out;
+		}
+
+		.type-field-arrow.pressed {
+			opacity: .35;
+		}
+
+		.type-field-arrow svg {
+			display: block;
+			width: 100%;
+			height: 100%;
+		}
+
+		.add-button {
+			display: block;
+			flex-shrink: 0;
+			width: clamp(56px, 7.5vw, 72px);
+			height: clamp(56px, 7.5vw, 72px);
+			filter: drop-shadow(0 6px 10px rgb(0 0 0 / 85%));
+		}
+
+		.chat-stack {
+			position: absolute;
+			left: 0;
+			right: 0;
+			bottom: calc(100% + 14px);
+			display: flex;
+			flex-direction: column;
+			gap: 14px;
+		}
+
+		.chat-bubble {
+			display: block;
+			width: var(--field-width);
+			max-width: 100%;
+			height: auto;
+			opacity: 0;
+			transform: translateY(16px);
+			filter: drop-shadow(0 12px 28px rgb(0 0 0 / 45%));
+			transition: opacity .9s ease-in-out, transform .9s ease-in-out;
+		}
+
+		.chat-usertext {
+			align-self: flex-end;
+		}
+
+		.chat-response {
+			align-self: flex-start;
+		}
+
+		.chat-bubble.visible {
+			opacity: 1;
+			transform: translateY(0);
+		}
+
+		.access-section {
+			position: relative;
+			z-index: 1;
+			padding: 0 24px;
+			text-align: center;
+		}
+
+		.access-title {
+			margin: 0 0 40px;
+			color: #fff;
+			font-family: 'Cal Sans', sans-serif;
+			font-size: clamp(28px, 4vw, 56px);
+			font-weight: 400;
+		}
+
+		.widget-carousel {
+			position: relative;
+			height: 220vh;
+		}
+
+		.widget-carousel-sticky {
+			position: sticky;
+			top: 110px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			height: calc(100vh - 110px);
+		}
+
+		.widget-stack {
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
+			width: clamp(320px, 42vw, 620px);
+		}
+
+		.widget-card {
+			position: relative;
+			display: block;
+			width: 100%;
+			height: auto;
+			opacity: 0;
+			overflow: hidden;
+			transform: translateY(0) scale(.75);
+			backdrop-filter: blur(60px);
+			-webkit-backdrop-filter: blur(60px);
+		}
+
+		.widget-card-2,
+		.widget-card-1 {
+			border-radius: 7.9% / 18.34%;
+		}
+
+		.widget-card-notification {
+			border-radius: 8.46% / 34.44%;
+		}
+
+		.widget-card-2 {
+			opacity: 1;
+			z-index: 3;
+			transform: translateY(0) scale(1);
+		}
+
+		.widget-card-1 {
+			z-index: 2;
+		}
+
+		.widget-card-notification {
+			z-index: 1;
+		}
+
+		.privacy-section {
+			position: relative;
+			z-index: 1;
+			display: flex;
+			justify-content: center;
+			padding: 140px 24px;
+		}
+
+		.privacy-showcase {
+			display: flex;
+			align-items: center;
+			gap: clamp(32px, 6vw, 96px);
+		}
+
+		.iphone-mockup {
+			display: block;
+			flex-shrink: 0;
+			width: clamp(220px, 22vw, 340px);
+			height: auto;
+			filter: drop-shadow(0 24px 48px rgb(0 0 0 / 55%));
+		}
+
+		.privacy-points {
+			display: flex;
+			flex-direction: column;
+			gap: 28px;
+			max-width: 480px;
+			text-align: left;
+		}
+
+		.privacy-point {
+			margin: 0;
+			color: #fff;
+			font-family: 'Cal Sans', sans-serif;
+			font-weight: 400;
+			line-height: 1.2;
+		}
+
+		.privacy-point:first-child {
+			font-size: clamp(28px, 3.4vw, 46px);
+		}
+
+		.privacy-point:not(:first-child) {
+			font-size: clamp(18px, 1.8vw, 26px);
+			color: rgb(255 255 255 / 80%);
+		}
+
+		@keyframes caret-blink {
+			0%, 49% { opacity: 1; }
+			50%, 100% { opacity: 0; }
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			.slate-chat,
+			.type-field-text,
+			.type-field-arrow,
+			.chat-bubble,
+			.chat-description {
+				transition: none;
+			}
+
+			.type-field-caret {
+				animation: none;
+			}
+
+			.widget-carousel {
+				height: auto;
+			}
+
+			.widget-carousel-sticky {
+				position: static;
+				height: auto;
+				padding: 40px 0;
+			}
+
+			.widget-card {
+				opacity: 1 !important;
+				transform: none !important;
+			}
+		}
+
+		@media (max-width: 900px) {
+			.chat-showcase {
+				flex-direction: column;
+				gap: 32px;
+			}
+
+			.chat-description {
+				align-items: flex-start;
+				max-width: 68vw;
+			}
+
+			.privacy-showcase {
+				flex-direction: column;
+				text-align: center;
+			}
+
+			.privacy-points {
+				align-items: center;
+				text-align: center;
+				max-width: 90vw;
+			}
+		}
+
+		@media (max-width: 640px) {
+			.chat-showcase {
+				--field-width: 68vw;
+			}
+		}
+
+		@media (max-width: 640px) {
+			.widget-carousel-sticky {
+				top: 65px;
+				height: calc(100vh - 65px);
+			}
+
+			.home-title {
+				margin-right: 30px;
+				margin-left: 30px;
+			}
+
+			.home-description {
+				margin-right: 30px;
+				margin-left: 30px;
+			}
+
+			.site-links {
+				gap: 14px;
+				font-size: .78rem;
+			}
+
+			.reminder-marquee {
+				display: grid;
+				gap: 12px;
+				margin-top: 48px;
+			}
+
+			.reminder-row:nth-child(3) {
+				display: none;
+			}
+
+			.reminder-set {
+				gap: 12px;
+				padding-right: 12px;
+			}
+
+			.reminder-card {
+				width: 210px;
+			}
+		}
+	</style>
+</head>
+<body>
+	<nav class="site-nav" aria-label="Main navigation">
+		<a class="site-brand" href="slateHome.html">slate.</a>
+		<div class="site-links">
+			<a href="#download">download</a>
+			<a href="#design">design</a>
+			<a href="#requests">requests</a>
+			<a href="slatePrivacy.html">privacy policy</a>
+		</div>
+	</nav>
+	<h1 class="home-title"><strong>reminders</strong><span>redefined.</span></h1>
+	<p class="home-description">slate is a reminders app designed to make creating reminders effortless.</p>
+	<section class="reminder-marquee" aria-label="Reminder card examples">
+		<div class="reminder-row">
+			<div class="reminder-set">
+				<img class="reminder-card" src="assets/row1-1.png" alt="">
+				<img class="reminder-card" src="assets/row1-2.png" alt="">
+				<img class="reminder-card" src="assets/row1-3.png" alt="">
+				<img class="reminder-card" src="assets/row1-4.png" alt="">
+				<img class="reminder-card" src="assets/row1-5.png" alt="">
+				<img class="reminder-card" src="assets/row1-6.png" alt="">
+			</div>
+			<div class="reminder-set" aria-hidden="true">
+				<img class="reminder-card" src="assets/row1-1.png" alt="">
+				<img class="reminder-card" src="assets/row1-2.png" alt="">
+				<img class="reminder-card" src="assets/row1-3.png" alt="">
+				<img class="reminder-card" src="assets/row1-4.png" alt="">
+				<img class="reminder-card" src="assets/row1-5.png" alt="">
+				<img class="reminder-card" src="assets/row1-6.png" alt="">
+			</div>
+		</div>
+		<div class="reminder-row">
+			<div class="reminder-set">
+				<img class="reminder-card" src="assets/row2-1.png" alt="">
+				<img class="reminder-card" src="assets/row2-2.png" alt="">
+				<img class="reminder-card" src="assets/row2-3.png" alt="">
+				<img class="reminder-card" src="assets/row2-4.png" alt="">
+				<img class="reminder-card" src="assets/row2-5.png" alt="">
+				<img class="reminder-card" src="assets/row2-6.png" alt="">
+			</div>
+			<div class="reminder-set" aria-hidden="true">
+				<img class="reminder-card" src="assets/row2-1.png" alt="">
+				<img class="reminder-card" src="assets/row2-2.png" alt="">
+				<img class="reminder-card" src="assets/row2-3.png" alt="">
+				<img class="reminder-card" src="assets/row2-4.png" alt="">
+				<img class="reminder-card" src="assets/row2-5.png" alt="">
+				<img class="reminder-card" src="assets/row2-6.png" alt="">
+			</div>
+		</div>
+		<div class="reminder-row">
+			<div class="reminder-set">
+				<img class="reminder-card" src="assets/row3-1.png" alt="">
+				<img class="reminder-card" src="assets/row3-2.png" alt="">
+				<img class="reminder-card" src="assets/row3-3.png" alt="">
+				<img class="reminder-card" src="assets/row3-4.png" alt="">
+				<img class="reminder-card" src="assets/row3-5.png" alt="">
+				<img class="reminder-card" src="assets/row3-6.png" alt="">
+			</div>
+			<div class="reminder-set" aria-hidden="true">
+				<img class="reminder-card" src="assets/row3-1.png" alt="">
+				<img class="reminder-card" src="assets/row3-2.png" alt="">
+				<img class="reminder-card" src="assets/row3-3.png" alt="">
+				<img class="reminder-card" src="assets/row3-4.png" alt="">
+				<img class="reminder-card" src="assets/row3-5.png" alt="">
+				<img class="reminder-card" src="assets/row3-6.png" alt="">
+			</div>
+		</div>
+	</section>
+	<section class="slate-chat-section">
+		<div class="chat-showcase">
+			<div class="slate-chat" aria-hidden="true">
+				<div class="chat-input-row">
+					<div class="chat-stack">
+						<img class="chat-bubble chat-usertext" src="assets/userText.png" alt="">
+						<img class="chat-bubble chat-response" src="assets/userResponse.png" alt="">
+					</div>
+					<div class="field-column">
+						<div class="type-field">
+							<span class="type-field-text">ask Slate to remind you<span class="type-field-caret">_</span></span>
+							<button class="type-field-arrow" type="button" tabindex="-1" aria-hidden="true">
+								<svg viewBox="-10 -10 200.6 228" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M90.3 191.368V14.247" stroke="white" stroke-width="50.9657" stroke-linecap="round"/>
+									<path d="M180.09 77.046L97.49 0.865L0.49 77.046" stroke="white" stroke-width="50.9657" stroke-linecap="round"/>
+								</svg>
+							</button>
+						</div>
+					</div>
+					<img class="add-button" src="assets/manual add.png" alt="">
+				</div>
+			</div>
+			<div class="chat-description">
+				<h3 class="chat-description-title">type naturally</h3>
+				<p class="chat-description-text">Text slate like a friend and let it format your reminders for you.</p>
+			</div>
+		</div>
+	</section>
+	<section class="access-section">
+		<div class="widget-carousel">
+			<div class="widget-carousel-sticky">
+				<h2 class="access-title">access slate anywhere.</h2>
+				<div class="widget-stack">
+					<img class="widget-card widget-card-2" src="assets/slateWidget2.svg" alt="Slate widget">
+					<img class="widget-card widget-card-1" src="assets/slateWidget1.svg" alt="Slate widget">
+					<img class="widget-card widget-card-notification" src="assets/slateNotification.svg" alt="Slate notification">
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="privacy-section">
+		<div class="privacy-showcase">
+			<img class="iphone-mockup" src="assets/iPhone MockUp.png" alt="Slate app on an iPhone">
+			<div class="privacy-points">
+				<p class="privacy-point">privacy by design</p>
+				<p class="privacy-point">all reminders are processed locally on your device</p>
+				<p class="privacy-point">no APIs. no data breach. 100% privacy</p>
+			</div>
+		</div>
+	</section>
+	<img class="home-background" src="assets/homeBackground.png" alt="">
+	<footer class="site-footer">
+		<a class="footer-brand" href="slateHome.html">slate.</a>
+		<div class="footer-mobile-content">
+			<div class="footer-attribution">
+				<img src="assets/collapse icon.svg" alt="Collapse Studios">
+				<span>a product of collapse studios.</span>
+			</div>
+			<nav class="footer-links" aria-label="Footer navigation">
+				<a href="#download">download</a>
+				<a href="#design">design</a>
+				<a href="#requests">requests</a>
+				<a href="slatePrivacy.html">privacy policy</a>
+				<a class="footer-instagram" href="https://www.instagram.com/slatereminders?stkn=MWJ2Mzd3cmprMjFleA==&amp;utm_source=qr" aria-label="Slate on Instagram">
+					<img src="assets/instagram-icon.svg" alt="">
+				</a>
+			</nav>
+		</div>
+	</footer>
+	<script>
+		(function () {
+			var placeholder = 'ask Slate to remind you';
+			var message = 'Hey Slate! Remind me to pick up my project equipment tomorrow afternoon.';
+			var scrollTrigger = 50;
+			var typingScrollTrigger = 50;
+			var played = false;
+			var typingStarted = false;
+			var revealScrollY = null;
+			var descriptionScrollY = null;
+
+			var chat = document.querySelector('.slate-chat');
+			var textEl = document.querySelector('.type-field-text');
+			var caretEl = document.querySelector('.type-field-caret');
+			var arrowEl = document.querySelector('.type-field-arrow');
+			var userTextEl = document.querySelector('.chat-usertext');
+			var userResponseEl = document.querySelector('.chat-response');
+			var descriptionEl = document.querySelector('.chat-description');
+
+			if (!chat) return;
+
+			var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+			function sleep(ms) {
+				return new Promise(function (resolve) { setTimeout(resolve, ms); });
+			}
+
+			function setText(text) {
+				textEl.textContent = text;
+				textEl.appendChild(caretEl);
+			}
+
+			function typeText(text, speed) {
+				return new Promise(function (resolve) {
+					textEl.textContent = '';
+					var i = 0;
+					(function step() {
+						textEl.textContent = text.slice(0, i);
+						textEl.scrollLeft = textEl.scrollWidth;
+						i++;
+						if (i <= text.length) {
+							setTimeout(step, speed);
+						} else {
+							resolve();
+						}
+					})();
+				});
+			}
+
+			function runTypingSequence() {
+				(async function () {
+					textEl.classList.add('active');
+					await typeText(message, 32);
+
+					await sleep(350);
+					arrowEl.classList.add('pressed');
+					await sleep(180);
+					arrowEl.classList.remove('pressed');
+
+					textEl.classList.remove('active');
+					textEl.classList.add('hidden');
+					await sleep(220);
+					setText(placeholder);
+					textEl.classList.remove('hidden');
+					await sleep(220);
+
+					await sleep(300);
+					userTextEl.classList.add('visible');
+
+					await sleep(400);
+					userResponseEl.classList.add('visible');
+				})();
+			}
+
+			function showDescription() {
+				descriptionEl.classList.add('visible');
+				descriptionScrollY = window.scrollY;
+				window.addEventListener('scroll', onScrollForTyping, { passive: true });
+				checkTypingTrigger();
+			}
+
+			function playSequence() {
+				if (reduceMotion) {
+					setText(message);
+					textEl.classList.add('active');
+					userTextEl.classList.add('visible');
+					userResponseEl.classList.add('visible');
+					descriptionEl.classList.add('visible');
+					return;
+				}
+
+				showDescription();
+			}
+
+			var observer = new IntersectionObserver(function (entries) {
+				entries.forEach(function (entry) {
+					if (entry.isIntersecting) {
+						chat.classList.add('in-view');
+						if (revealScrollY === null) {
+							revealScrollY = window.scrollY;
+						}
+					}
+				});
+			}, { threshold: 0.3 });
+
+			observer.observe(chat);
+
+			function checkTypingTrigger() {
+				if (typingStarted || descriptionScrollY === null) return;
+				var atMaxScroll = (window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight - 1);
+				if (window.scrollY - descriptionScrollY >= typingScrollTrigger || atMaxScroll) {
+					typingStarted = true;
+					window.removeEventListener('scroll', onScrollForTyping);
+					runTypingSequence();
+				}
+			}
+
+			function onScrollForTyping() {
+				checkTypingTrigger();
+			}
+
+			function onScroll() {
+				if (played || revealScrollY === null) return;
+				var atMaxScroll = (window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight - 1);
+				if (window.scrollY - revealScrollY >= scrollTrigger || atMaxScroll) {
+					played = true;
+					window.removeEventListener('scroll', onScroll);
+					playSequence();
+				}
+			}
+
+			window.addEventListener('scroll', onScroll, { passive: true });
+		})();
+
+		(function () {
+			var wrapper = document.querySelector('.widget-carousel');
+			var widget2 = document.querySelector('.widget-card-2');
+			var widget1 = document.querySelector('.widget-card-1');
+			var notification = document.querySelector('.widget-card-notification');
+
+			if (!wrapper || !widget2 || !widget1 || !notification) return;
+
+			if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+			var ticking = false;
+
+			function update() {
+				ticking = false;
+				var rect = wrapper.getBoundingClientRect();
+				var scrollable = rect.height - window.innerHeight;
+				var progress = scrollable > 0 ? (-rect.top) / scrollable : 0;
+				progress = Math.min(1, Math.max(0, progress));
+
+				var scale = 0.75 + 0.25 * progress;
+				var offset1 = widget1.offsetTop;
+				var offsetN = notification.offsetTop;
+
+				widget1.style.transform = 'translateY(' + (-offset1 * (1 - progress)) + 'px) scale(' + scale + ')';
+				widget1.style.opacity = String(progress);
+
+				notification.style.transform = 'translateY(' + (-offsetN * (1 - progress)) + 'px) scale(' + scale + ')';
+				notification.style.opacity = String(progress);
+			}
+
+			function onScroll() {
+				if (!ticking) {
+					ticking = true;
+					requestAnimationFrame(update);
+				}
+			}
+
+			window.addEventListener('scroll', onScroll, { passive: true });
+			window.addEventListener('resize', onScroll);
+			update();
+		})();
+	</script>
+</body>
+</html>
