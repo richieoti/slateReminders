@@ -117,7 +117,10 @@ body {
 }
 
 .privacy-title {
-	width: max-content;
+	display: flex;
+	flex-wrap: wrap;
+	column-gap: .2em;
+	width: 100%;
 	margin: 0;
 	font-family: 'Cal Sans', sans-serif;
 	line-height: .95;
