@@ -135,7 +135,7 @@ body {
 }
 
 .privacy-title span {
-	font-size: inherit;
+	font-size: clamp(44px, 16vw, 220px);
 }
 
 .privacy-description {
@@ -149,7 +149,7 @@ body {
 
 .privacy-copy {
 	max-width: 900px;
-	margin-top: clamp(80px, 12vw, 170px);
+	margin-top: clamp(24px, 4vw, 48px);
 	font-family: 'SF Pro Display', sans-serif;
 	font-size: clamp(16px, 1.5vw, 21px);
 }
