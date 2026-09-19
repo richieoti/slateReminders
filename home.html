@@ -75,13 +75,18 @@
 
 		.hero-wrapper {
 			position: relative;
+		}
+
+		.hero-bg-clip {
+			position: absolute;
+			inset: 0;
+			z-index: 0;
 			overflow: hidden;
 		}
 
 		.home-background {
 			position: absolute;
 			inset: 0;
-			z-index: 0;
 			display: block;
 			width: 100%;
 			height: 100%;
@@ -611,7 +616,9 @@
 		</div>
 	</nav>
 	<div class="hero-wrapper">
-		<img class="home-background" src="assets/homeBackground.png" alt="">
+		<div class="hero-bg-clip">
+			<img class="home-background" src="assets/homeBackground.png" alt="">
+		</div>
 		<h1 class="home-title"><strong>reminders</strong><span>redefined.</span></h1>
 	<p class="home-description">slate is a reminders app designed to make creating reminders effortless.</p>
 	<section class="reminder-marquee" aria-label="Reminder card examples">
