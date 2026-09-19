@@ -73,14 +73,14 @@
 		}
 
 		.home-background {
-			position: fixed;
-			inset: 0;
+			position: absolute;
+			top: -35px;
+			left: 0;
 			z-index: 0;
 			display: block;
 			width: 100%;
-			height: 100%;
+			height: auto;
 			margin: 0;
-			object-fit: cover;
 			filter: blur(24px);
 			transform: scale(1.1);
 		}
@@ -347,6 +347,26 @@
 			align-items: center;
 			justify-content: center;
 			height: calc(100vh - 110px);
+			overflow: hidden;
+		}
+
+		.widget-carousel-bg {
+			position: absolute;
+			inset: 0;
+			z-index: 0;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			filter: blur(24px);
+			transform: scale(1.1);
+		}
+
+		.widget-carousel-content {
+			position: relative;
+			z-index: 1;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
 		}
 
 		.widget-stack {
@@ -437,6 +457,56 @@
 		.privacy-point:not(:first-child) {
 			font-size: clamp(18px, 1.8vw, 26px);
 			color: rgb(255 255 255 / 80%);
+		}
+
+		.download-section {
+			position: relative;
+			z-index: 1;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 32px;
+			padding: 140px 24px;
+			text-align: center;
+		}
+
+		.download-title {
+			margin: 0;
+			color: #fff;
+			font-family: 'Cal Sans', sans-serif;
+			font-size: clamp(28px, 4vw, 56px);
+			font-weight: 400;
+		}
+
+		.download-icon {
+			display: block;
+			width: clamp(96px, 10vw, 140px);
+			height: auto;
+			filter: drop-shadow(0 16px 32px rgb(0 0 0 / 45%));
+		}
+
+		.download-button {
+			display: inline-flex;
+			align-items: center;
+			gap: 14px;
+			padding: 18px 36px;
+			background: #fff;
+			border-radius: 999px;
+			text-decoration: none;
+			box-shadow: 0 14px 32px rgb(0 0 0 / 35%);
+		}
+
+		.download-apple-logo {
+			display: block;
+			width: 22px;
+			height: auto;
+		}
+
+		.download-button-text {
+			color: #000;
+			font-family: 'SF Pro Display', sans-serif;
+			font-size: clamp(16px, 1.6vw, 20px);
+			font-weight: 800;
 		}
 
 		@keyframes caret-blink {
@@ -643,11 +713,14 @@
 	<section class="access-section">
 		<div class="widget-carousel">
 			<div class="widget-carousel-sticky">
-				<h2 class="access-title">access slate anywhere.</h2>
-				<div class="widget-stack">
-					<img class="widget-card widget-card-2" src="assets/slateWidget2.svg" alt="Slate widget">
-					<img class="widget-card widget-card-1" src="assets/slateWidget1.svg" alt="Slate widget">
-					<img class="widget-card widget-card-notification" src="assets/slateNotification.svg" alt="Slate notification">
+				<img class="widget-carousel-bg" src="assets/homeBackground.png" alt="">
+				<div class="widget-carousel-content">
+					<h2 class="access-title">access slate anywhere.</h2>
+					<div class="widget-stack">
+						<img class="widget-card widget-card-2" src="assets/slateWidget2.svg" alt="Slate widget">
+						<img class="widget-card widget-card-1" src="assets/slateWidget1.svg" alt="Slate widget">
+						<img class="widget-card widget-card-notification" src="assets/slateNotification.svg" alt="Slate notification">
+					</div>
 				</div>
 			</div>
 		</div>
@@ -661,6 +734,14 @@
 				<p class="privacy-point">no APIs. no data breach. 100% privacy</p>
 			</div>
 		</div>
+	</section>
+	<section class="download-section">
+		<h2 class="download-title">download on the app store today.</h2>
+		<img class="download-icon" src="assets/slateAppStoreIcon.png" alt="Slate app icon">
+		<a class="download-button" href="#">
+			<img class="download-apple-logo" src="assets/appleLogo.svg" alt="">
+			<span class="download-button-text">continue to App Store</span>
+		</a>
 	</section>
 	<img class="home-background" src="assets/homeBackground.png" alt="">
 	<footer class="site-footer">
