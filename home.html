@@ -158,7 +158,7 @@
 			z-index: 1;
 			display: flex;
 			justify-content: center;
-			padding: clamp(32px, 5vw, 64px) 24px 160px;
+			padding: clamp(32px, 5vw, 64px) 24px 60px;
 		}
 
 		.chat-showcase {
@@ -172,7 +172,7 @@
 			display: flex;
 			flex-direction: column;
 			align-items: center;
-			padding-top: calc(var(--field-width) * .465 + 28px);
+			padding-top: calc(var(--field-width) * .372 + 28px);
 			opacity: 0;
 			transition: opacity 1.6s ease-in-out;
 		}
@@ -308,7 +308,7 @@
 
 		.chat-bubble {
 			display: block;
-			width: var(--field-width);
+			width: calc(var(--field-width) * .8);
 			max-width: 100%;
 			height: auto;
 			opacity: 0;
@@ -352,12 +352,12 @@
 
 		.widget-carousel-sticky {
 			position: sticky;
-			top: 160px;
+			top: 100px;
 			display: flex;
 			flex-direction: column;
 			align-items: center;
 			justify-content: center;
-			height: calc(100vh - 160px);
+			height: calc(100vh - 100px);
 		}
 
 		.widget-stack {
@@ -500,6 +500,20 @@
 			font-weight: 800;
 		}
 
+		.download-button.is-disabled {
+			opacity: 0.4;
+			box-shadow: none;
+			cursor: not-allowed;
+		}
+
+		.download-launch-note {
+			margin: -12px 0 0;
+			color: rgb(255 255 255 / 70%);
+			font-family: 'SF Pro Display', sans-serif;
+			font-size: clamp(15px, 1.4vw, 18px);
+			font-weight: 500;
+		}
+
 		@keyframes caret-blink {
 			0%, 49% { opacity: 1; }
 			50%, 100% { opacity: 0; }
@@ -565,8 +579,8 @@
 
 		@media (max-width: 640px) {
 			.widget-carousel-sticky {
-				top: 115px;
-				height: calc(100vh - 115px);
+				top: 65px;
+				height: calc(100vh - 65px);
 			}
 
 			.home-title {
@@ -731,14 +745,15 @@
 	<section class="download-section">
 		<h2 class="download-title">download on the app store today.</h2>
 		<img class="download-icon" src="assets/slateAppStoreIcon.png" alt="Slate app icon">
-		<a class="download-button" href="#">
+		<a class="download-button is-disabled" aria-disabled="true">
 			<img class="download-apple-logo" src="assets/appleLogo.svg" alt="">
 			<span class="download-button-text">continue to App Store</span>
 		</a>
+		<p class="download-launch-note">launching october 1st.</p>
 	</section>
 	<footer class="site-footer">
 		<a class="footer-brand" href="home.html">slate.</a>
-		<div class="footer-mobile-content">
+		<div class="footer-content">
 			<div class="footer-attribution">
 				<img src="assets/collapse icon.svg" alt="Collapse Studios">
 				<span>a product of collapse studios.</span>
