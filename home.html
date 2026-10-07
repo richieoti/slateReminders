@@ -33,12 +33,13 @@
 		}
 
 		.home-title::before {
+			--dot-width: clamp(116px, 28.4vw, 400px);
 			content: '';
 			position: absolute;
 			top: 8%;
-			left: calc(100% - 128px);
+			left: calc(100% - var(--dot-width) * .32);
 			z-index: 0;
-			width: 400px;
+			width: var(--dot-width);
 			height: clamp(110px, 27vw, 380px);
 			background: url('assets/slateDotIcon.svg') center / 100% 100% no-repeat;
 			pointer-events: none;
@@ -81,6 +82,8 @@
 
 		.hero-wrapper {
 			position: relative;
+			/* clip, not hidden, so the sticky widget carousel keeps working */
+			overflow-x: clip;
 		}
 
 		.hero-bg-clip {
@@ -748,7 +751,7 @@
 			<span class="site-menu-bar"></span>
 		</button>
 		<div class="site-links" id="site-links">
-			<a href="#download">download</a>
+			<a href="https://apps.apple.com/us/app/slate-reminders/id6813649205">download</a>
 			<a href="design.html">design</a>
 			<a href="#requests">requests</a>
 			<a href="privacy-policy.html">privacy policy</a>
