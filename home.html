@@ -73,6 +73,12 @@
 			line-height: 1.15;
 		}
 
+		.home-cta {
+			position: relative;
+			z-index: 1;
+			margin: 28px 80px 0;
+		}
+
 		.hero-wrapper {
 			position: relative;
 		}
@@ -356,8 +362,9 @@
 			display: flex;
 			flex-direction: column;
 			align-items: center;
-			justify-content: center;
+			justify-content: flex-start;
 			height: calc(100vh - 100px);
+			padding-top: 24px;
 		}
 
 		.widget-stack {
@@ -365,7 +372,8 @@
 			display: flex;
 			flex-direction: column;
 			gap: 20px;
-			width: clamp(320px, 42vw, 620px);
+			/* height cap keeps the fully expanded stack on screen while pinned */
+			width: min(clamp(320px, 42vw, 620px), calc(85vh - 215px));
 		}
 
 		.widget-card {
@@ -479,12 +487,16 @@
 		.download-button {
 			display: inline-flex;
 			align-items: center;
-			gap: 14px;
-			padding: 18px 36px;
+			gap: 12px;
+			padding: 11px 30px;
 			background: #fff;
 			border-radius: 999px;
 			text-decoration: none;
 			box-shadow: 0 14px 32px rgb(0 0 0 / 35%);
+		}
+
+		.download-button:hover {
+			opacity: .85;
 		}
 
 		.download-apple-logo {
@@ -498,20 +510,6 @@
 			font-family: 'SF Pro Display', sans-serif;
 			font-size: clamp(16px, 1.6vw, 20px);
 			font-weight: 800;
-		}
-
-		.download-button.is-disabled {
-			opacity: 0.4;
-			box-shadow: none;
-			cursor: not-allowed;
-		}
-
-		.download-launch-note {
-			margin: -12px 0 0;
-			color: rgb(255 255 255 / 70%);
-			font-family: 'SF Pro Display', sans-serif;
-			font-size: clamp(15px, 1.4vw, 18px);
-			font-weight: 500;
 		}
 
 		@keyframes caret-blink {
@@ -588,14 +586,17 @@
 				margin-left: 30px;
 			}
 
+			.home-title::before {
+				display: none;
+			}
+
 			.home-description {
 				margin-right: 30px;
 				margin-left: 30px;
 			}
 
-			.site-links {
-				gap: 14px;
-				font-size: .78rem;
+			.home-cta {
+				margin: 22px 30px 0;
 			}
 
 			.reminder-marquee {
@@ -622,7 +623,11 @@
 <body>
 	<nav class="site-nav" aria-label="Main navigation">
 		<a class="site-brand" href="home.html">slate.</a>
-		<div class="site-links">
+		<button class="site-menu-toggle" type="button" aria-expanded="false" aria-controls="site-links" aria-label="Open menu">
+			<span class="site-menu-bar"></span>
+			<span class="site-menu-bar"></span>
+		</button>
+		<div class="site-links" id="site-links">
 			<a href="#download">download</a>
 			<a href="design.html">design</a>
 			<a href="#requests">requests</a>
@@ -634,7 +639,13 @@
 			<img class="home-background" src="assets/homeBackground.png" alt="">
 		</div>
 		<h1 class="home-title"><strong>reminders</strong><span>redefined.</span></h1>
-	<p class="home-description">slate is a reminders app designed to make creating reminders effortless.</p>
+	<p class="home-description">Slate is a reminders app designed to make creating reminders effortless.</p>
+	<div class="home-cta">
+		<a class="download-button" href="https://apps.apple.com/us/app/slate-reminders/id6813649205">
+			<img class="download-apple-logo" src="assets/appleLogo.svg" alt="">
+			<span class="download-button-text">download now</span>
+		</a>
+	</div>
 	<section class="reminder-marquee" aria-label="Reminder card examples">
 		<div class="reminder-row">
 			<div class="reminder-set">
@@ -742,14 +753,13 @@
 			</div>
 		</div>
 	</section>
-	<section class="download-section">
+	<section class="download-section" id="download">
 		<h2 class="download-title">download on the app store today.</h2>
 		<img class="download-icon" src="assets/slateAppStoreIcon.png" alt="Slate app icon">
-		<a class="download-button is-disabled" aria-disabled="true">
+		<a class="download-button" href="https://apps.apple.com/us/app/slate-reminders/id6813649205">
 			<img class="download-apple-logo" src="assets/appleLogo.svg" alt="">
-			<span class="download-button-text">continue to App Store</span>
+			<span class="download-button-text">download now</span>
 		</a>
-		<p class="download-launch-note">launching october 1st.</p>
 	</section>
 	<footer class="site-footer">
 		<a class="footer-brand" href="home.html">slate.</a>
@@ -769,6 +779,7 @@
 			</nav>
 		</div>
 	</footer>
+	<script src="nav.js"></script>
 	<script>
 		(function () {
 			var placeholder = 'ask Slate to remind you';
