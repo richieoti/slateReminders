@@ -362,8 +362,6 @@
 			display: flex;
 			flex-direction: column;
 			align-items: center;
-			justify-content: flex-start;
-			height: calc(100vh - 100px);
 			padding-top: 24px;
 		}
 
@@ -416,29 +414,16 @@
 			z-index: 1;
 			display: flex;
 			justify-content: center;
-			padding: 140px 24px;
-		}
-
-		.privacy-showcase {
-			display: flex;
-			align-items: center;
-			gap: clamp(32px, 6vw, 96px);
-		}
-
-		.iphone-mockup {
-			display: block;
-			flex-shrink: 0;
-			width: clamp(220px, 22vw, 340px);
-			height: auto;
-			filter: drop-shadow(0 24px 48px rgb(0 0 0 / 55%));
+			padding: 140px 24px 80px;
 		}
 
 		.privacy-points {
 			display: flex;
 			flex-direction: column;
-			gap: 28px;
-			max-width: 480px;
-			text-align: left;
+			align-items: center;
+			gap: 12px;
+			max-width: 560px;
+			text-align: center;
 		}
 
 		.privacy-point {
@@ -446,7 +431,7 @@
 			color: #fff;
 			font-family: 'Cal Sans', sans-serif;
 			font-weight: 400;
-			line-height: 1.2;
+			line-height: 1.05;
 		}
 
 		.privacy-point:first-child {
@@ -456,6 +441,133 @@
 		.privacy-point:not(:first-child) {
 			font-size: clamp(18px, 1.8vw, 26px);
 			color: rgb(255 255 255 / 80%);
+		}
+
+		.screens-section {
+			position: relative;
+			z-index: 1;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 28px;
+			padding: 0 24px 40px;
+			overflow-x: clip;
+		}
+
+		.screens-deck {
+			--phone-width: clamp(200px, 20vw, 290px);
+			--fan-offset: 62%;
+			position: relative;
+			width: calc(var(--phone-width) * 2.6);
+			max-width: 100%;
+			height: calc(var(--phone-width) * 2.1);
+			touch-action: pan-y;
+		}
+
+		.screen-phone {
+			position: absolute;
+			top: 0;
+			left: 50%;
+			width: var(--phone-width);
+			margin-left: calc(var(--phone-width) / -2);
+			padding: 0;
+			background: none;
+			border: 0;
+			border-radius: 14% / 6.6%;
+			cursor: pointer;
+			opacity: 0;
+			transform: scale(.9);
+			transform-origin: 50% 100%;
+			-webkit-tap-highlight-color: transparent;
+			transition: transform .8s cubic-bezier(.22, .8, .24, 1), opacity .8s ease, filter .8s ease;
+		}
+
+		.screen-phone:focus-visible {
+			outline: 2px solid #fff;
+			outline-offset: 6px;
+		}
+
+		.screen-phone img {
+			display: block;
+			width: 100%;
+			height: auto;
+			filter: drop-shadow(0 24px 48px rgb(0 0 0 / 55%));
+			transform: perspective(1000px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+			transition: transform .35s ease-out;
+			-webkit-user-drag: none;
+			user-select: none;
+		}
+
+		.screens-deck.in-view .screen-phone {
+			opacity: 1;
+		}
+
+		.screens-deck.in-view .screen-phone[data-pos="center"] {
+			z-index: 3;
+			transform: none;
+		}
+
+		.screens-deck.in-view .screen-phone[data-pos="left"],
+		.screens-deck.in-view .screen-phone[data-pos="right"] {
+			z-index: 2;
+			filter: brightness(.5);
+		}
+
+		.screens-deck.in-view .screen-phone[data-pos="left"] {
+			transform: translateX(calc(var(--fan-offset) * -1)) scale(.84) rotate(-7deg);
+		}
+
+		.screens-deck.in-view .screen-phone[data-pos="right"] {
+			transform: translateX(var(--fan-offset)) scale(.84) rotate(7deg);
+		}
+
+		.screens-deck.in-view .screen-phone[data-pos="hidden"] {
+			z-index: 1;
+			opacity: 0;
+		}
+
+		@media (hover: hover) {
+			.screens-deck.in-view .screen-phone[data-pos="left"]:hover,
+			.screens-deck.in-view .screen-phone[data-pos="right"]:hover {
+				filter: brightness(.75);
+			}
+		}
+
+		.screens-caption {
+			min-height: 1.2em;
+			margin: 0;
+			color: #fff;
+			font-family: 'Cal Sans', sans-serif;
+			font-size: clamp(20px, 2.2vw, 30px);
+			font-weight: 400;
+			text-align: center;
+			transition: opacity .25s ease;
+		}
+
+		.screens-caption.is-changing {
+			opacity: 0;
+		}
+
+		.screens-dots {
+			display: flex;
+			gap: 8px;
+			margin-top: -12px;
+		}
+
+		.screens-dot {
+			width: 8px;
+			height: 8px;
+			padding: 0;
+			background: rgb(255 255 255 / 30%);
+			border: 0;
+			border-radius: 999px;
+			cursor: pointer;
+			transition: width .3s ease, background-color .3s ease;
+		}
+
+		.screens-dot.is-active {
+			width: 24px;
+			background: #fff;
 		}
 
 		.download-section {
@@ -484,13 +596,17 @@
 			filter: drop-shadow(0 16px 32px rgb(0 0 0 / 45%));
 		}
 
+		/* Figma frame 783:51 values, in px at a 35px label; --px scales them down with the label */
 		.download-button {
+			--px: calc(1em / 35);
 			display: inline-flex;
-			align-items: center;
-			gap: 12px;
-			padding: 11px 30px;
+			align-items: flex-start;
+			gap: calc(19.881 * var(--px));
+			height: calc(82 * var(--px));
+			padding: calc(19.547 * var(--px)) calc(50.316 * var(--px)) calc(20.453 * var(--px)) calc(39.803 * var(--px));
 			background: #fff;
 			border-radius: 999px;
+			font-size: clamp(20px, 2.75vw, 35px);
 			text-decoration: none;
 			box-shadow: 0 14px 32px rgb(0 0 0 / 35%);
 		}
@@ -501,15 +617,15 @@
 
 		.download-apple-logo {
 			display: block;
-			width: 22px;
-			height: auto;
+			width: auto;
+			height: .95em;
 		}
 
 		.download-button-text {
 			color: #000;
 			font-family: 'SF Pro Display', sans-serif;
-			font-size: clamp(16px, 1.6vw, 20px);
 			font-weight: 800;
+			line-height: 1.2;
 		}
 
 		@keyframes caret-blink {
@@ -528,6 +644,13 @@
 
 			.type-field-caret {
 				animation: none;
+			}
+
+			.screen-phone,
+			.screen-phone img,
+			.screens-caption,
+			.screens-dot {
+				transition: none;
 			}
 
 			.widget-carousel {
@@ -557,14 +680,7 @@
 				max-width: 68vw;
 			}
 
-			.privacy-showcase {
-				flex-direction: column;
-				text-align: center;
-			}
-
 			.privacy-points {
-				align-items: center;
-				text-align: center;
 				max-width: 90vw;
 			}
 		}
@@ -578,7 +694,6 @@
 		@media (max-width: 640px) {
 			.widget-carousel-sticky {
 				top: 65px;
-				height: calc(100vh - 65px);
 			}
 
 			.home-title {
@@ -616,6 +731,11 @@
 
 			.reminder-card {
 				width: 210px;
+			}
+
+			.screens-deck {
+				--phone-width: 46vw;
+				--fan-offset: 40%;
 			}
 		}
 	</style>
@@ -744,13 +864,33 @@
 	</section>
 	</div>
 	<section class="privacy-section">
-		<div class="privacy-showcase">
-			<img class="iphone-mockup" src="assets/iPhone MockUp.png" alt="Slate app on an iPhone">
-			<div class="privacy-points">
-				<p class="privacy-point">privacy by design</p>
-				<p class="privacy-point">all reminders are processed locally on your device</p>
-				<p class="privacy-point">no APIs. no data breach. 100% privacy</p>
-			</div>
+		<div class="privacy-points">
+			<p class="privacy-point">privacy by design</p>
+			<p class="privacy-point">all reminders are processed locally on your device</p>
+			<p class="privacy-point">no APIs. no data breach. 100% privacy</p>
+		</div>
+	</section>
+	<section class="screens-section" aria-label="Slate app screens">
+		<div class="screens-deck">
+			<button class="screen-phone" type="button" data-caption="your next slate, right on your home screen.">
+				<img src="assets/Group 155.png" alt="Slate widget on an iPhone home screen" draggable="false">
+			</button>
+			<button class="screen-phone" type="button" data-caption="just type. slate does the rest.">
+				<img src="assets/iPhone MockUp.png" alt="Creating reminders by chatting with Slate" draggable="false">
+			</button>
+			<button class="screen-phone" type="button" data-caption="every slate, at a glance.">
+				<img src="assets/Group 156.png" alt="All slates list in the Slate app" draggable="false">
+			</button>
+			<button class="screen-phone" type="button" data-caption="or add one manually, anytime.">
+				<img src="assets/Group 157.png" alt="Adding a custom reminder in the Slate app" draggable="false">
+			</button>
+		</div>
+		<p class="screens-caption" aria-live="polite">just type. slate does the rest.</p>
+		<div class="screens-dots">
+			<button class="screens-dot" type="button" aria-label="Show home screen widget"></button>
+			<button class="screens-dot" type="button" aria-label="Show chatting with Slate"></button>
+			<button class="screens-dot" type="button" aria-label="Show all slates"></button>
+			<button class="screens-dot" type="button" aria-label="Show manual reminder"></button>
 		</div>
 	</section>
 	<section class="download-section" id="download">
@@ -954,6 +1094,170 @@
 			window.addEventListener('scroll', onScroll, { passive: true });
 			window.addEventListener('resize', onScroll);
 			update();
+		})();
+
+		(function () {
+			var deck = document.querySelector('.screens-deck');
+			var caption = document.querySelector('.screens-caption');
+
+			if (!deck || !caption) return;
+
+			var phones = Array.prototype.slice.call(deck.querySelectorAll('.screen-phone'));
+			var dots = Array.prototype.slice.call(document.querySelectorAll('.screens-dot'));
+			var count = phones.length;
+			var active = 1;
+			var autoTimer = null;
+			var captionTimer = null;
+			var userInteracted = false;
+			var hovering = false;
+			var inView = false;
+			var swiped = false;
+			var startX = null;
+
+			var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+			var canTilt = !reduceMotion && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+			function setCaption(text) {
+				if (caption.textContent === text) return;
+				if (reduceMotion) {
+					caption.textContent = text;
+					return;
+				}
+				clearTimeout(captionTimer);
+				caption.classList.add('is-changing');
+				captionTimer = setTimeout(function () {
+					caption.textContent = text;
+					caption.classList.remove('is-changing');
+				}, 250);
+			}
+
+			function resetTilt() {
+				phones.forEach(function (phone) {
+					phone.style.removeProperty('--tilt-x');
+					phone.style.removeProperty('--tilt-y');
+				});
+			}
+
+			function render() {
+				phones.forEach(function (phone, i) {
+					var offset = (i - active + count) % count;
+					var pos = offset === 0 ? 'center' : offset === 1 ? 'right' : offset === count - 1 ? 'left' : 'hidden';
+					phone.dataset.pos = pos;
+					phone.setAttribute('aria-current', offset === 0 ? 'true' : 'false');
+				});
+				dots.forEach(function (dot, i) {
+					dot.classList.toggle('is-active', i === active);
+					dot.setAttribute('aria-current', i === active ? 'true' : 'false');
+				});
+				setCaption(phones[active].dataset.caption);
+			}
+
+			function go(index) {
+				active = (index + count) % count;
+				resetTilt();
+				render();
+			}
+
+			function stopAuto() {
+				clearInterval(autoTimer);
+				autoTimer = null;
+			}
+
+			function startAuto() {
+				if (reduceMotion || userInteracted || hovering || !inView || autoTimer) return;
+				autoTimer = setInterval(function () { go(active + 1); }, 4500);
+			}
+
+			function interact(index) {
+				userInteracted = true;
+				stopAuto();
+				go(index);
+			}
+
+			phones.forEach(function (phone, i) {
+				phone.addEventListener('click', function () {
+					if (swiped) {
+						swiped = false;
+						return;
+					}
+					interact(i === active ? active + 1 : i);
+				});
+			});
+
+			dots.forEach(function (dot, i) {
+				dot.addEventListener('click', function () { interact(i); });
+			});
+
+			deck.addEventListener('keydown', function (event) {
+				if (event.key === 'ArrowLeft') {
+					event.preventDefault();
+					interact(active - 1);
+				} else if (event.key === 'ArrowRight') {
+					event.preventDefault();
+					interact(active + 1);
+				}
+			});
+
+			deck.addEventListener('pointerdown', function (event) {
+				startX = event.clientX;
+				swiped = false;
+			});
+
+			deck.addEventListener('pointerup', function (event) {
+				if (startX === null) return;
+				var dx = event.clientX - startX;
+				startX = null;
+				if (Math.abs(dx) > 40) {
+					swiped = true;
+					interact(dx < 0 ? active + 1 : active - 1);
+				}
+			});
+
+			deck.addEventListener('pointercancel', function () {
+				startX = null;
+			});
+
+			deck.addEventListener('mouseenter', function () {
+				hovering = true;
+				stopAuto();
+			});
+
+			deck.addEventListener('mouseleave', function () {
+				hovering = false;
+				resetTilt();
+				startAuto();
+			});
+
+			if (canTilt) {
+				deck.addEventListener('pointermove', function (event) {
+					var phone = phones[active];
+					var rect = phone.getBoundingClientRect();
+					var x = (event.clientX - rect.left) / rect.width - .5;
+					var y = (event.clientY - rect.top) / rect.height - .5;
+					if (Math.abs(x) > .5 || Math.abs(y) > .5) {
+						resetTilt();
+						return;
+					}
+					phone.style.setProperty('--tilt-x', (-y * 10) + 'deg');
+					phone.style.setProperty('--tilt-y', (x * 14) + 'deg');
+				});
+			}
+
+			render();
+
+			var observer = new IntersectionObserver(function (entries) {
+				entries.forEach(function (entry) {
+					inView = entry.isIntersecting;
+					if (inView) {
+						deck.classList.add('in-view');
+						startAuto();
+					} else {
+						stopAuto();
+					}
+				});
+			}, { threshold: 0.4 });
+
+			observer.observe(deck);
 		})();
 	</script>
 </body>
